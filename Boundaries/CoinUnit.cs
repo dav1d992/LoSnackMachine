@@ -1,9 +1,9 @@
 namespace Boundaries;
 public class CoinUnit
 {
-    public EventHandler<CoinEventArgs> CoinInsertedEvent;
+    public event EventHandler<CoinEventArgs> CoinInsertedEvent = delegate { };
 
-    public void onCoinInserted(float amount)
+    public void CoinInserted(float amount)
     {
         var args = new CoinEventArgs();
         args.Amount = amount;
