@@ -1,4 +1,4 @@
-﻿using Boundaries;
+﻿using Entities;
 
 namespace Entities;
 
@@ -6,20 +6,26 @@ public class BalanceModule : IBalanceModule
 {
     public event EventHandler<BalanceModuleEventArgs> NewBalanceEvent = delegate { };
 
-    CoinUnit _coinUnit;
+    public CoinUnit CoinUnit;
 
     public BalanceModule(CoinUnit coinUnit)
     {
-        _coinUnit = coinUnit;
+        CoinUnit = coinUnit;
     }
+
+    public float CurrentBalance = 0;
 
     public void UpdateBalance(float amount)
     {
-        _coinUnit.CoinInsertedEvent += (s, args) =>
+        CoinUnit.CoinInsertedEvent += (s, args) =>
         {
-            Console.WriteLine($"Coin inserted - {amount}");
+            Console.WriteLine($"Coin inserted: {amount} DKK");
+            CurrentBalance += amount;
         };
-        _coinUnit.CoinInserted(amount);
+        if (CoinUnit.IsOpen)
+        {
+            CoinUnit.CoinInserted(amount);
+        }
 
         var args = new BalanceModuleEventArgs();
         args.Amount = amount;

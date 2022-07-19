@@ -1,6 +1,7 @@
-namespace Boundaries;
+namespace Entities;
 public class CoinUnit
 {
+    public Boolean IsOpen = false;
     public event EventHandler<CoinEventArgs> CoinInsertedEvent = delegate { };
 
     public void CoinInserted(float amount)
@@ -8,6 +9,11 @@ public class CoinUnit
         var args = new CoinEventArgs();
         args.Amount = amount;
         CoinInsertedEvent.Invoke(this, args);
+    }
+
+    public void setOpenState(Boolean isOpen)
+    {
+        IsOpen = isOpen;
     }
 }
 
