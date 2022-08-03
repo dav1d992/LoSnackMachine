@@ -15,6 +15,11 @@ public class CoinUnit
     {
         IsOpen = isOpen;
     }
+
+    public void PayBack(float amount)
+    {
+        Console.WriteLine($"I have returned {amount} DKK");
+    }
 }
 
 public class CoinEventArgs : EventArgs

@@ -1,6 +1,3 @@
-
-using Boundaries;
-using Entities;
 using SnackMachineTests.Helpers;
 
 namespace SnackMachineTests;

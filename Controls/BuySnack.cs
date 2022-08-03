@@ -37,33 +37,37 @@ public class BuySnack
             return _database.Data[itemName];
         }
     }
+    public event EventHandler<NewBalanceArgs> NewBalanceEvent = delegate { };
 
     public void OnNewBalance(float amount, string itemName)
     {
         _balanceModule.NewBalanceEvent += (s, args) =>
         {
-
+            var newBalanceArgs = new NewBalanceArgs();
             Console.WriteLine($"Coin inserted - {amount}");
             while (_balanceModule.CurrentBalance < _database.Data[itemName])
             {
-                // trigger some event to let Touchschreen know
-                // show balance
+                newBalanceArgs.Amount = _database.Data[itemName] - _balanceModule.CurrentBalance;
+                NewBalanceEvent.Invoke(this, newBalanceArgs);
             }
             if (_balanceModule.CurrentBalance > _database.Data[itemName])
             {
-                // you will get money in return
-                // _balanceModule.CurrentBalance - _database.Data[itemName]
-                // show balance
+                var current = _balanceModule.CurrentBalance - _database.Data[itemName];
+                newBalanceArgs.Amount = current;
+                NewBalanceEvent.Invoke(this, newBalanceArgs);
+                _balanceModule.CoinUnit.PayBack(current);
             }
-            else
-            {
-                // Luk indkast 
-                _balanceModule.CoinUnit.setOpenState(false);
-                _dispenser.dispenseItem(itemName);
-                _balanceModule.CurrentBalance = 0;
-                // show balance
-            }
+            newBalanceArgs.Amount = 0;
+            NewBalanceEvent.Invoke(this, newBalanceArgs);
+            _balanceModule.CoinUnit.setOpenState(false);
+            _dispenser.dispenseItem(itemName);
+            _balanceModule.CurrentBalance = 0;
         };
+    }
+
+    public class NewBalanceArgs : EventArgs
+    {
+        public float Amount { get; set; }
     }
 
 }
